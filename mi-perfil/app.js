@@ -29,5 +29,25 @@ const renderizarPerfil = (perfil) => {
     document.querySelector("#usuario").textContent = perfil.usuario;
     document.querySelector("#email").textContent = perfil.email;
     document.querySelector("#ciudad").textContent = perfil.ciudad;
-    document.querySelector("#avatar").src = perfil.avatar
+    document.querySelector("#avatar").src = perfil.avatar;
+}
+
+// Sección E: Fetch API
+async function cargarUsuarios() {
+    let mensaje = document.querySelector("#mensaje");
+    mensaje.textContent = "Cargando...";
+
+    try {
+        let users = await fetch("https://api.github.com/users");
+        let userData = await users.json();
+
+        let perfil = construirPerfil(userData);
+        renderizarPerfil(perfil);
+        mostrarEtiquetas(habilidades);
+
+        mensaje.textContent = "";
+    } catch (error) {
+        mensaje.textContent = "Error al cargar usuario."
+        console.error(error);
+    }
 }
