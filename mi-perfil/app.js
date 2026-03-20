@@ -8,7 +8,8 @@ const mostrarEtiquetas = (lista) => {
     lista.forEach((habilidad) => {
         let nuevoSpan = document.createElement("span");
         nuevoSpan.classList.add("etiqueta");
-        etiquetas.appendChild(nuevoSpan);
+        nuevoSpan.textContent = habilidad;
+        contenedorEtiquetas.appendChild(nuevoSpan);
     });
 }
 
@@ -25,25 +26,61 @@ const construirPerfil = (datos) => {
 
 // Sección D: Función que actualiza el DOM
 const renderizarPerfil = (perfil) => {
-    document.querySelector("#nombre").textContent = perfil.nombre;
-    document.querySelector("#usuario").textContent = perfil.usuario;
-    document.querySelector("#email").textContent = perfil.email;
-    document.querySelector("#ciudad").textContent = perfil.ciudad;
-    document.querySelector("#avatar").src = perfil.avatar;
+    let contenedor = document.getElementById("contenedor");
+
+    let _div = document.createElement("div");
+    _div.style.width = "100px";
+    _div.style.height = "100px";
+    _div.style.backgroundColor = "lightGreen";
+    _div.style.padding = "10px";
+    contenedor.appendChild(_div);
+
+    let _img = document.createElement("img");
+    _img.src = perfil.avatar_url;
+    _img.width = "20px";
+    _img.height = "20px";
+    _div.appendChild(_img);
+
+    let _h1 = document.createElement("h1");
+    _h1.innerText = perfil.nombre;
+    _div.appendChild(_h1);
+
+    let _h2 = document.createElement("h2");
+    _h1.innerText = perfil.usuario;
+    _div.appendChild(_h2);
+
+    let _h3 = document.createElement("h3");
+    _h1.innerText = perfil.email;
+    _div.appendChild(_h3);
+
+    let _h4 = document.createElement("h3");
+    _h1.innerText = perfil.ciudad;
+    _div.appendChild(_h4);
+
 }
 
 // Sección E: Fetch API
 async function cargarUsuarios() {
-    let mensaje = document.querySelector("#mensaje");
+    let mensaje = document.createElement("p");
     mensaje.textContent = "Cargando...";
 
     try {
+        document.body.appendChild(mensaje);
         let users = await fetch("https://api.github.com/users");
         let userData = await users.json();
 
-        let perfil = construirPerfil(userData);
-        renderizarPerfil(perfil);
-        mostrarEtiquetas(habilidades);
+        let nuevoDiv = document.createElement("div");
+        nuevoDiv.style.width = "100vw";
+        nuevoDiv.style.width = "100vh";
+        nuevoDiv.style.backgroundColor = "lightBlue";
+        nuevoDiv.style.padding = "16px";
+        nuevoDiv.id = "contenedor";
+        document.body.appendChild(nuevoDiv);
+
+        userData.forEach((_usuario) => {
+            construirPerfil(_usuario);
+            renderizarPerfil(_usuario);
+        });
 
         mensaje.textContent = "";
     } catch (error) {
@@ -51,3 +88,11 @@ async function cargarUsuarios() {
         console.error(error);
     }
 }
+
+// Sección F: Conectar el botón
+let button = document.createElement("button");
+button.innerText = "Cargar Usuarios";
+button.style.width = "250px";
+button.style.height = "100px";
+button.addEventListener("click", () => { cargarUsuarios(); });
+document.body.appendChild(button);
