@@ -6,7 +6,8 @@ const mostrarEtiquetas = (habilidades) => {
 }
 
 const createSpan = () => {
+    const etiquetas = document.querySelector("#etiquetas")
     let nuevoSpan = document.createElement("span");
     nuevoSpan.classList.add("etiqueta");
-    
+    etiquetas.appendChild(nuevoSpan)
 }
